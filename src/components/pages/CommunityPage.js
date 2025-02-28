@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import Navbar from "../Navbar";
 
 const CommunityPage = () => {
   const [communities, setCommunities] = useState([]);
@@ -69,11 +70,8 @@ const CommunityPage = () => {
   };
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "auto", padding: "20px" }}>
-      <h1 style={{ textAlign: "center", marginBottom: "20px", color: "#333" }}>
-        Communities
-      </h1>
-
+    <div style={styles.pageContainer}>
+      <Navbar/>
       {/* Show Create Button for Professors */}
       {role === "professor" && (
         <Link to="/create-community">
@@ -203,8 +201,128 @@ const CommunityPage = () => {
           ))}
         </div>
       )}
+       <footer className="footer" style={styles.footer}>
+              <div className="footer-content" style={styles.footerContent}>
+                <div className="footer-column"style={styles.footerColumn}>
+                  <h4>For Students</h4>
+                  <ul>
+                    <li>
+                      <a href="#communities">Communities</a>
+                    </li>
+                    <li>
+                      <a href="#job-list">Job List</a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="footer-column" style={styles.footerColumn}>
+                  <h4>For Professors</h4>
+                  <ul>
+                    <li>
+                      <a href="#create-community">Create Community</a>
+                    </li>
+                    <li>
+                      <a href="#manage-resources">Manage Resources</a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="footer-column" style={styles.footerColumn}>
+                  <h4>For HR</h4>
+                  <ul>
+                    <li>
+                      <a href="#post-job">Post Job</a>
+                    </li>
+                    <li>
+                      <a href="#talent-pool">Talent Pool</a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="footer-column" style={styles.footerColumn}>
+                  <h4>Support</h4>
+                  <ul>
+                    <li><Link to="/contact-us">Contact Us</Link></li>
+                    <li><Link to="/faq">FAQ</Link></li>
+                  </ul>
+                </div>
+                <div className="footer-column" style={styles.footerColumn}>
+                  <h4>Legal</h4>
+                  <ul>
+                    <li>
+                      <a href="#privacy-policy">Privacy Policy</a>
+                    </li>
+                    <li>
+                      <a href="#terms-of-service">Terms of Service</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <p className="copyright">
+                © 2025 Shri L.R. Tiwari College of Engineering. All rights reserved.
+              </p>
+            </footer>
     </div>
   );
 };
+
+const styles = {
+  pageContainer: {
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "115vh",
+    // Ensures the page takes at least full screen height
+  },
+  footer: {
+    backgroundColor: "transparent",
+    color: "black",
+    padding: "40px 60px",
+    textAlign: "center",
+    marginTop: "auto",
+    borderTop: "1px solid #e0e0e0",
+    
+  },
+
+  footerContent: {
+    display: "flex",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+  },
+
+  footerColumn: {
+    marginBottom: "20px",
+    textAlign: "left",
+  },
+
+  footerColumnTitle: {
+    marginBottom: "10px",
+    fontSize: "1.2em",
+  },
+
+  footerColumnList: {
+    listStyleType: "none",
+    padding: 0,
+  },
+
+  footerColumnItem: {
+    margin: "5px 0",
+  },
+
+  footerColumnLink: {
+    color: "black",
+    textDecoration: "none",
+    fontSize: "1em",
+  },
+
+  footerColumnLinkHover: {
+    textDecoration: "underline",
+  },
+
+  copyright: {
+    marginTop: "20px",
+    fontSize: "0.9em",
+    width: "100%",
+    textAlign: "center",
+    color: "rgba(175, 173, 173, 0.6)",
+  },
+};
+
 
 export default CommunityPage;

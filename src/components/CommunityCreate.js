@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const CommunityCreate = () => {
   const [name, setName] = useState("");
@@ -25,6 +26,8 @@ const CommunityCreate = () => {
 
   return (
     <div style={{ padding: "20px", maxWidth: "500px", margin: "auto", textAlign: "center" }}>
+                <Navbar/>
+
       <h1 style={{ color: "#333", fontSize: "24px" }}>Create Community</h1>
       
       <input

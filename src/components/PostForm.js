@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import Navbar from "./Navbar";
 
 const PostForm = ({ communityId }) => {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
-  const [media, setMedia] = useState([]); // Store media URLs
+  const [media, setMedia] = useState([]);
   const [userId, setUserId] = useState(null);
   const token = localStorage.getItem("token");
 
@@ -14,7 +15,6 @@ const PostForm = ({ communityId }) => {
       try {
         const decoded = jwtDecode(token);
         setUserId(decoded.id);
-        console.log("Decoded user ID:", decoded.id);
       } catch (error) {
         console.error("Error decoding token:", error);
       }
@@ -22,13 +22,8 @@ const PostForm = ({ communityId }) => {
   }, [token]);
 
   const handlePost = async () => {
-    if (!userId) {
-      console.error("User ID is missing.");
-      return;
-    }
-
-    if (!communityId) {
-      console.error("Community ID is missing.");
+    if (!userId || !communityId) {
+      console.error("User ID or Community ID is missing.");
       return;
     }
 
@@ -38,29 +33,20 @@ const PostForm = ({ communityId }) => {
         author: userId,
         community: communityId,
         tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
-        media, // Media URLs from the backend
+        media,
       };
 
-      console.log("Sending post data:", postData);
+      await axios.post("http://localhost:5000/api/posts/create", postData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-      const res = await axios.post(
-        "http://localhost:5000/api/posts/create",
-        postData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log("Post created successfully:", res.data);
       alert("Post created!");
-
-      // Reset form fields
       setContent("");
       setTags("");
-      setMedia([]); // Clear media after posting
+      setMedia([]);
     } catch (error) {
       console.error("Error posting:", error.response?.data || error.message);
     }
@@ -78,82 +64,66 @@ const PostForm = ({ communityId }) => {
       const res = await axios.post("http://localhost:5000/api/posts/upload", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data", // Important for file uploads
+          "Content-Type": "multipart/form-data",
         },
       });
 
-      // Assuming the backend responds with an array of media URLs
-      setMedia(res.data.mediaUrls); // Update the media state with URLs
+      setMedia(res.data.mediaUrls);
     } catch (error) {
       console.error("Error uploading media:", error.response?.data || error.message);
     }
   };
 
   return (
-    <div
-      style={{
-        padding: "15px",
-        backgroundColor: "#f8f9fa",
-        borderRadius: "8px",
-        boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-        maxWidth: "600px",
-        margin: "auto",
-      }}
-    >
+    <div className="post-form-container">
       <textarea
-        style={{
-          width: "100%",
-          height: "100px",
-          padding: "10px",
-          borderRadius: "5px",
-          border: "1px solid #ccc",
-          fontSize: "14px",
-          marginBottom: "10px",
-        }}
+        className="post-textarea"
         placeholder="Write a post..."
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
       <input
         type="text"
-        style={{
-          width: "100%",
-          padding: "10px",
-          borderRadius: "5px",
-          border: "1px solid #ccc",
-          fontSize: "14px",
-          marginBottom: "10px",
-        }}
+        className="post-input"
         placeholder="Enter tags (comma-separated)"
         value={tags}
         onChange={(e) => setTags(e.target.value)}
       />
-      <input
-        type="file"
-        multiple
-        onChange={handleFileChange} // Handle file selection
-        style={{
-          width: "100%",
-          marginBottom: "10px",
-        }}
-      />
-      <button
-        style={{
-          backgroundColor: "#007bff",
-          color: "#fff",
-          padding: "10px 15px",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          fontSize: "14px",
-          marginTop: "10px",
-          display: "block",
-          width: "100%",
-        }}
-        onClick={handlePost}
-      >
-        Post
-      </button>
+      <input type="file" multiple className="post-file-input" onChange={handleFileChange} />
+      <button className="post-button" onClick={handlePost}>Post</button>
+      <style>{`
+        .post-form-container {
+          padding: 20px;
+          background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+          border-radius: 12px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          max-width: 600px;
+          margin: auto;
+        }
+        .post-textarea, .post-input, .post-file-input {
+          width: 100%;
+          padding: 12px;
+          border-radius: 8px;
+          border: none;
+          font-size: 15px;
+          margin-bottom: 12px;
+          box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .post-button {
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: #fff;
+          padding: 12px 20px;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 16px;
+          width: 100%;
+          transition: 0.3s;
+        }
+        .post-button:hover {
+          opacity: 0.8;
+        }
+      `}</style>
     </div>
   );
 };

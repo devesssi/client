@@ -30,8 +30,11 @@ const LandingPage = () => {
           <button className="cta-button">
             Get Started <span className="arrow">→</span>
           </button>
-          <button className="cta-button-secondary">Explore Communities</button>
-        </div>
+          <Link to="/communities">
+  <button className="cta-button-secondary">
+    Explore Communities
+  </button>
+</Link>        </div>
       </header>
 
       <section className="features">

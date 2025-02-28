@@ -109,7 +109,7 @@ const JobsPage = () => {
                 <p>{job.description}</p>
                 <p><strong>Company:</strong> {job.company}</p>
                 <p><strong>Location:</strong> {job.location}</p>
-                <p><strong>Salary:</strong> ${job.salary}</p>
+                <p><strong>Salary:</strong> {job.salary}</p>
                 <p><strong>Posted By:</strong> {job.postedBy?.name || "Unknown"}</p>
               </div>
             ))
